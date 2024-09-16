@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Transformation support matrix – IbisML</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-dashboard/quarto-dashboard.js"></script>
+<script src="../../site_libs/quarto-dashboard/stickythead.js"></script>
+<script src="../../site_libs/quarto-dashboard/datatables.min.js" kdttablesentinel="true"></script>
+<script src="../../site_libs/quarto-dashboard/pdfmake.min.js" kdttablesentinel="true"></script>
+<script src="../../site_libs/quarto-dashboard/vfs_fonts.js" kdttablesentinel="true"></script>
+<script src="../../site_libs/quarto-dashboard/web-components.js" type="module"></script>
+<script src="../../site_libs/quarto-dashboard/components.js"></script>
+<link href="../../site_libs/quarto-dashboard/datatables.min.css" rel="stylesheet" kdttablesentinel="true">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<meta name="twitter:title" content="Transformation support matrix – IbisML">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="quarto-dashboard nav-sidebar nav-fixed dashboard-fill fullcontent">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.svg" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">IbisML</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../tutorial/index.html"> 
+<span class="menu-text">Tutorial</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-reference">    
+        <li class="dropdown-header">Core</li>
+        <li>
+    <a class="dropdown-item" href="../../reference/core.html">
+ <span class="dropdown-text">Common</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/selectors.html">
+ <span class="dropdown-text">Selectors</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Steps</li>
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-imputation.html">
+ <span class="dropdown-text">Imputation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-encoding.html">
+ <span class="dropdown-text">Encoding</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-standardization.html">
+ <span class="dropdown-text">Standardization</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-discretization.html">
+ <span class="dropdown-text">Discretization</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-feature-selection.html">
+ <span class="dropdown-text">Feature selection</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-feature-generation.html">
+ <span class="dropdown-text">Feature generation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-outlier-handling.html">
+ <span class="dropdown-text">Outlier handling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-temporal-feature-extraction.html">
+ <span class="dropdown-text">Temporal feature extraction</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../reference/steps-other.html">
+ <span class="dropdown-text">Other</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Support</li>
+        <li>
+    <a class="dropdown-item" href="../../reference/support-matrix/index.html">
+ <span class="dropdown-text">Transformation support matrix</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Utilities</li>
+        <li>
+    <a class="dropdown-item" href="../../reference/utils-data-splitting.html">
+ <span class="dropdown-text">Data splitting</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/ibis-project/ibis-ml">
+            Source code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/ibis-project/ibis-ml/issues">
+            Open an issue
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+<header id="quarto-dashboard-header">
+<nav class="navbar navbar-expand-md slim" data-bs-theme="dark">
+  <div class="navbar-container container-fluid">
+    <button class="navbar-toggler hidden" type="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-controls="dashboard-collapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>    
+
+
+    <div class="navbar-brand-container">       
+
+      <div class="navbar-title">
+        <div class="navbar-title-text"><a href="#">Transformation support matrix</a></div>
+        
+        
+      </div>
+    </div>
+</div>
+</nav>
+</header></header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+<!-- main -->
+
+<div class="bslib-grid-item html-fill-item bslib-grid" data-layout="fill" style="display: grid; grid-template-rows: minmax(3em, 25fr) minmax(3em, 70fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 50fr) minmax(3em, 25fr) minmax(3em, 25fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card bslib-card html-fill-container" data-title="Welcome to the transformation support matrix!" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title">Welcome to the transformation support matrix!</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<p>This is a Quarto dashboard that shows the IbisML transformations each backend supports.</p>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex html-fill-item html-fill-container">
+<div class="callout-icon-container html-fill-item html-fill-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container html-fill-item html-fill-container">
+<p>Due to differences in SQL dialects and upstream support for different operations in different backends, support for the full breadth of the IbisML transfromations varies:</p>
+<ol type="1">
+<li>✅ Fully supported</li>
+<li>🚫 Not supported</li>
+<li>🟡 Partial support (hover over for more information)</li>
+<li>🔍 Support varies by operation or data type across different backends (check the <a href="https://ibis-project.org/backends/support/matrix">Ibis operation support matrix</a> for details)</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card valuebox cell bslib-card html-fill-container bslib-value-box bg-info showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div data-icon="signpost-split-fill" class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-signpost-split-fill"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+Number of backends
+</p>
+<p class="value-box-value">
+20
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card valuebox cell bslib-card html-fill-container bslib-value-box bg-green showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div data-icon="database" class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-database"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+Number of SQL backends
+</p>
+<p class="value-box-value">
+17
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+<div class="bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell bslib-card html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output cell-output-display html-fill-item html-fill-container">
+<table id="itables_2d7d383f_dee2_4c34_b9a2_88f3450a4e6e" class="display nowrap compact" data-quarto-disable-processing="true" style="table-layout:auto;width:auto;margin:auto;caption-side:bottom">
+<thead>
+    <tr>
+      <th></th>
+      <th>Backend</th>
+      <th>bigquery</th>
+      <th>clickhouse</th>
+      <th>dask</th>
+      <th>datafusion</th>
+      <th>druid</th>
+      <th>duckdb</th>
+      <th>exasol</th>
+      <th>flink</th>
+      <th>impala</th>
+      <th>mssql</th>
+      <th>mysql</th>
+      <th>oracle</th>
+      <th>pandas</th>
+      <th>polars</th>
+      <th>postgres</th>
+      <th>pyspark</th>
+      <th>risingwave</th>
+      <th>snowflake</th>
+      <th>sqlite</th>
+      <th>trino</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>Full coverage</th>
+      <th>17 (81%)</th>
+      <th>19 (90%)</th>
+      <th>17 (81%)</th>
+      <th>18 (86%)</th>
+      <th>9 (43%)</th>
+      <th>21 (100%)</th>
+      <th>14 (67%)</th>
+      <th>14 (67%)</th>
+      <th>15 (71%)</th>
+      <th>14 (67%)</th>
+      <th>17 (81%)</th>
+      <th>18 (86%)</th>
+      <th>17 (81%)</th>
+      <th>20 (95%)</th>
+      <th>21 (100%)</th>
+      <th>4 (19%)</th>
+      <th>20 (95%)</th>
+      <th>21 (100%)</th>
+      <th>14 (67%)</th>
+      <th>17 (81%)</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>Partial coverage</th>
+      <th>2 (10%)</th>
+      <th>1 (5%)</th>
+      <th>2 (10%)</th>
+      <th>1 (5%)</th>
+      <th>5 (24%)</th>
+      <th>0 (0%)</th>
+      <th>3 (14%)</th>
+      <th>3 (14%)</th>
+      <th>4 (19%)</th>
+      <th>3 (14%)</th>
+      <th>2 (10%)</th>
+      <th>3 (14%)</th>
+      <th>2 (10%)</th>
+      <th>0 (0%)</th>
+      <th>0 (0%)</th>
+      <th>1 (5%)</th>
+      <th>0 (0%)</th>
+      <th>0 (0%)</th>
+      <th>4 (19%)</th>
+      <th>2 (10%)</th>
+    </tr>
+    <tr>
+      <th>Category</th>
+      <th>Step</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead><tbody><tr>
+<td style="vertical-align:middle; text-align:left">
+<div style="float:left; margin-right: 10px;" class="html-fill-item html-fill-container">
+<a href="https://mwouts.github.io/itables/"><svg class="main-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="64" viewbox="0 0 500 400" style="font-family: 'Droid Sans', sans-serif;">
+    <g style="fill:#d9d7fc">
+        <path d="M100,400H500V357H100Z"></path>
+        <path d="M100,300H400V257H100Z"></path>
+        <path d="M0,200H400V157H0Z"></path>
+        <path d="M100,100H500V57H100Z"></path>
+        <path d="M100,350H500V307H100Z"></path>
+        <path d="M100,250H400V207H100Z"></path>
+        <path d="M0,150H400V107H0Z"></path>
+        <path d="M100,50H500V7H100Z"></path>
+    </g>
+    <g style="fill:#1a1366;stroke:#1a1366;">
+   <rect x="100" y="7" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="5s" repeatcount="indefinite"></animate>
+      <animate attributename="x" values="100;100;500" dur="5s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="0" y="107" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="3.5s" repeatcount="indefinite"></animate>
+    <animate attributename="x" values="0;0;400" dur="3.5s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="100" y="207" width="300" height="43">
+    <animate attributename="width" values="0;300;0" dur="3s" repeatcount="indefinite"></animate>
+    <animate attributename="x" values="100;100;400" dur="3s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="100" y="307" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="4s" repeatcount="indefinite"></animate>
+      <animate attributename="x" values="100;100;500" dur="4s" repeatcount="indefinite"></animate>
+  </rect>
+        <g style="fill:transparent;stroke-width:8; stroke-linejoin:round" rx="5">
+            <g transform="translate(45 50) rotate(-45)">
+                <circle r="33" cx="0" cy="0"></circle>
+                <rect x="-8" y="32" width="16" height="30"></rect>
+            </g>
+
+            <g transform="translate(450 152)">
+                <polyline points="-15,-20 -35,-20 -35,40 25,40 25,20"></polyline>
+                <rect x="-15" y="-40" width="60" height="60"></rect>
+            </g>
+
+            <g transform="translate(50 352)">
+                <polygon points="-35,-5 0,-40 35,-5"></polygon>
+                <polygon points="-35,10 0,45 35,10"></polygon>
+            </g>
+
+            <g transform="translate(75 250)">
+                <polyline points="-30,30 -60,0 -30,-30"></polyline>
+                <polyline points="0,30 -30,0 0,-30"></polyline>
+            </g>
+
+            <g transform="translate(425 250) rotate(180)">
+                <polyline points="-30,30 -60,0 -30,-30"></polyline>
+                <polyline points="0,30 -30,0 0,-30"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
+</a>
+</div>
+<div class="html-fill-item html-fill-container">
+Loading ITables v2.1.5 from the internet...
+(need <a href="https://mwouts.github.io/itables/troubleshooting.html">help</a>?)</div></td>
+
+</tr></tbody>
+
+</table>
+<link href="https://www.unpkg.com/dt_for_itables@2.0.12/dt_bundle.css" rel="stylesheet">
+<script type="module">
+    import {DataTable, jQuery as $} from 'https://www.unpkg.com/dt_for_itables@2.0.12/dt_bundle.js';
+
+    document.querySelectorAll("#itables_2d7d383f_dee2_4c34_b9a2_88f3450a4e6e:not(.dataTable)").forEach(table => {
+        // Define the table data
+        const data = [["common", "Cast", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>"], ["common", "Drop", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705"], ["common", "Mutate", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>"], ["common", "MutateAt", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>", "<span title='check backend-specific support'>\ud83d\udd0d</span>"], ["discretize", "DiscretizeKBins", "<span title='Support: uniform'>\ud83d\udfe1</span>", "\u2705", "\u2705", "<span title='Support: uniform'>\ud83d\udfe1</span>", "<span title='Support: uniform'>\ud83d\udfe1</span>", "\u2705", "\u2705", "<span title='Support: uniform'>\ud83d\udfe1</span>", "<span title='Support: uniform'>\ud83d\udfe1</span>", "<span title='Support: uniform'>\ud83d\udfe1</span>", "<span title='Support: uniform'>\ud83d\udfe1</span>", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "<span title='Support: uniform'>\ud83d\udfe1</span>", "<span title='Support: uniform'>\ud83d\udfe1</span>"], ["encode", "CountEncode", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"], ["encode", "OneHotEncode", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"], ["encode", "OrdinalEncode", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"], ["encode", "TargetEncode", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\ud83d\udeab", "\u2705"], ["generate_features", "CreatePolynomialFeatures", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"], ["handle_outliers", "HandleUnivariateOutliers", "<span title='Support: z-score'>\ud83d\udfe1</span>", "\u2705", "\u2705", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "\u2705", "<span title='Support: z-score'>\ud83d\udfe1</span>", "<span title='Support: z-score'>\ud83d\udfe1</span>", "<span title='Support: z-score'>\ud83d\udfe1</span>", "<span title='Support: z-score'>\ud83d\udfe1</span>", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "<span title='Support: z-score'>\ud83d\udfe1</span>", "<span title='Support: z-score'>\ud83d\udfe1</span>"], ["impute", "FillNA", "\u2705", "\u2705", "\u2705", "\u2705", "<span title='Support: int,str'>\ud83d\udfe1</span>", "\u2705", "<span title='Support: int,str'>\ud83d\udfe1</span>", "<span title='Support: int,str'>\ud83d\udfe1</span>", "\u2705", "<span title='Support: int,str'>\ud83d\udfe1</span>", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "<span title='Support: int,str'>\ud83d\udfe1</span>", "\u2705"], ["impute", "ImputeMean", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\ud83d\udeab", "\u2705"], ["impute", "ImputeMedian", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\ud83d\udeab", "\ud83d\udeab", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\ud83d\udeab", "\ud83d\udeab"], ["impute", "ImputeMode", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\ud83d\udeab", "\ud83d\udeab", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\ud83d\udeab", "\u2705", "<span title='Support: int,str'>\ud83d\udfe1</span>", "\ud83d\udeab"], ["select_features", "DropZeroVariance", "\u2705", "\u2705", "\u2705", "\u2705", "<span title='Support: str'>\ud83d\udfe1</span>", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "<span title='Support: int,str'>\ud83d\udfe1</span>", "\u2705", "\u2705", "\u2705", "\u2705"], ["standardize", "ScaleMinMax", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"], ["standardize", "ScaleStandard", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"], ["temporal", "ExpandDate", "\u2705", "\u2705", "<span title='Support: dow'>\ud83d\udfe1</span>", "\u2705", "<span title='Support: y,doy,m,d,w'>\ud83d\udfe1</span>", "\u2705", "<span title='Support: y,doy,m,d,w'>\ud83d\udfe1</span>", "\u2705", "<span title='Support: y,dow,m,d,w'>\ud83d\udfe1</span>", "\u2705", "\u2705", "<span title='Support: m,y,d'>\ud83d\udfe1</span>", "<span title='Support: dow'>\ud83d\udfe1</span>", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"], ["temporal", "ExpandDateTime", "\u2705", "\u2705", "<span title='Support: y,mon,dow,doy,ms,s,m,d'>\ud83d\udfe1</span>", "\u2705", "<span title='Support: y,mon,doy,week,s,m,d'>\ud83d\udfe1</span>", "\u2705", "<span title='Support: y,mon,doy,week,ms,s,m,d'>\ud83d\udfe1</span>", "\u2705", "<span title='Support: y,mon,dow,week,ms,s,m,d'>\ud83d\udfe1</span>", "\u2705", "\u2705", "<span title='Support: y,mon,s,m,d'>\ud83d\udfe1</span>", "<span title='Support: y,mon,dow,doy,ms,s,m,d'>\ud83d\udfe1</span>", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"], ["temporal", "ExpandTime", "\u2705", "<span title='Support: m,s,h'>\ud83d\udfe1</span>", "\ud83d\udeab", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "\u2705", "<span title='Support: m,s,h'>\ud83d\udfe1</span>", "\ud83d\udeab", "\u2705", "\u2705", "\ud83d\udeab", "\u2705", "\u2705", "\u2705", "\u2705"]];
+
+        // Define the dt_args
+        let dt_args = {"ordering": false, "paging": false, "buttons": ["copy", "excel", "csv"], "autoWidth": false, "dom": "fiBrtlp", "info": true, "keys": true, "language": {"info": "Showing _TOTAL_ entries"}, "lengthChange": false, "order": [], "responsive": true, "searching": true};
+        dt_args["data"] = data;
+
+        
+        new DataTable(table, dt_args);
+    });
+</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div id="3ade8a4a-fb1d-4a6c-8409-ac45482d5fc9" class="hidden">
+
+</div>
+</div>
+</div>
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions"><ul><li><a href="https://github.com/ibis-project/ibis-ml/edit/main/docs/reference/support-matrix/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/ibis-project/ibis-ml/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ibis-project/ibis-ml">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://ibis-project.zulipchat.com/#narrow/stream/426262-ibis-ml">
+      <i class="bi bi-zulip" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+<script type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (_event) {
+  if (window.bslib.Card) {
+    window.bslib.Card.initializeAllCards();
+  }
+}); 
+</script>
+  
+
+
+
+</body></html>
